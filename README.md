@@ -1,2 +1,2 @@
-The Odin Project: HashMap project
-creating my own HashMap implimentation
+Personal Project: Hash Map & Hash Set data structures
+folders contain relevent modules for differentiation

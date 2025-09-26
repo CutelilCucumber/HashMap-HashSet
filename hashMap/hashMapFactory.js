@@ -1,8 +1,9 @@
-import { linkedList } from "./listFactory";
+import { linkedList } from "./listFactory.js";
 
 export function hashMap(){
 
     let _loadFactor = .75;
+    //bucketMap entries are initialized to undefined
     let _bucketMap = [];
     _bucketMap.length = 16;
 
@@ -20,7 +21,7 @@ export function hashMap(){
 
     function growCapacity(){
         //allocate new bucket array with double size
-        //rehash every key-value pair
+        //rehash every key-value pair, including each node in a list
         //discard old bucket array
     }
     

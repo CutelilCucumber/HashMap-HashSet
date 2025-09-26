@@ -1,3 +1,4 @@
+//linkedList factory containing only keys and link in each node
 export function linkedList() {
     let _head = null;
     let _size = 0;
