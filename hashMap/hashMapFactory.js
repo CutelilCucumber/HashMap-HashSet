@@ -2,33 +2,71 @@ import { linkedList } from "./mapListFactory.js";
 
 export function hashMap(){
 
+    let _load = 0;
+    let _deloadFactor = .25
     let _loadFactor = .75;
     //bucketMap entries are initialized to undefined
     let _bucketMap = [];
-    _bucketMap.length = 16;
+    let _capacity = 16;
+    _bucketMap.length = _capacity;
 
     function hash(key) {
         let hashCode = 0;
       
         const primeNumber = 31;
         for (let i = 0; i < key.length; i++) {
-            hashCode = (primeNumber * hashCode + key.charCodeAt(i)) % _bucketMap.length;
+            hashCode = (primeNumber * hashCode + key.charCodeAt(i)) % _capacity;
             //modulo inside the loop helps avoid integer overflow
         }
-
+        
         return hashCode;
     }
 
-    function growCapacity(){
-        //allocate new bucket array with double size
+    function changeCapacity(grow){
+        //allow for growing or shrinking
+        if (grow) _capacity=_capacity*2;
+        else _capacity=_capacity/2;
+        console.log("Rehasing with capacity: "+_capacity)
+        //allocate new bucket array
+        let tempMap = _bucketMap;
+        clear();//discard old bucket array
         //rehash every key-value pair, including each node in a list
-        //discard old bucket array
+        for (let i=0; i<tempMap.length; i++){
+            if(tempMap[i]){
+                while (tempMap[i].size() !== 0){
+                    set(tempMap[i].tail().getValue());
+                    tempMap[i].pop();
+                }
+            }
+        }
+        console.log("REHASH COMPLETE")
+        
     }
     
-    const set = (key, value) => {
-        //if key already exists, overwrite and update key's value
-        //growCapacity exactly when the map reaches the load factor
+    const set = (key) => {
+        //if key already exists, exit set
+        let newHash = hash(key);
+        if (!_bucketMap[newHash]) {
+            _bucketMap[newHash] = new linkedList();
+            _bucketMap[newHash].prepend(key);
 
+
+            //growCapacity exactly when map reaches the load factor
+            _load++;
+            
+            if ((_load/_bucketMap.length) >= _loadFactor) changeCapacity(1);
+
+        } else {
+            if (_bucketMap[newHash].contains(key)){
+                console.log("key already exists. Set failure")
+                return 0;
+            } else {
+                _bucketMap[newHash].append(key);
+
+            }
+        }
+        console.log("load: "+_load/_bucketMap.length)
+        console.log ("assigned to bucket: "+newHash)
     }
 
     const get = (key) => {
@@ -37,31 +75,69 @@ export function hashMap(){
 
     const has = (key) => {
         //returns true if key is found otherwise false
+        if (_bucketMap[hash(key)]){
+            if (_bucketMap[hash(key)].contains(key)) return true;
+        }
+        return false;
     }
 
     const remove = (key) => {
         //remove entry with key and return true. if key isnt found return false
+        let newHash = hash(key);
+        if (!_bucketMap[newHash]) return false;
+        let foundIndex = _bucketMap[newHash].find(key);
+        if (!foundIndex) return false;
+        _bucketMap[newHash].removeAt(foundIndex);
+        //adjust load and change capacity if necessary
+        _load--;
+        if ((_load/_bucketMap.length) <= _deloadFactor && _capacity > 16) changeCapacity();
+        console.log('load: '+_load/_bucketMap.length);
+        console.log('removed key from bucket: '+newHash)
+        return true;
     }
 
     const length = () => {
         //returns the number of stored keys in hashmap
+        let count = 0;
+        for (let i=0; i<_capacity; i++){
+            if(_bucketMap[i]){
+                count += _bucketMap[i].size();
+            }
+        }
+        return count;
     }
 
     const clear = () => {
-        //removes all entries in hashmap (should reduce tablesize as well)
+        //removes all entries in hashmap
+        _load = 0;
+        _bucketMap = [];
+        _bucketMap.length = _capacity;
     }
 
     const keys = () => {
         //returns array containing all keys in hashmap
+        let keyArr = [];
+        let k = 0;
+        for (let i=0; i<_capacity; i++){
+            if(_bucketMap[i]){
+                let j = 1;
+                while (j <= _bucketMap[i].size()){
+                    keyArr[k] = _bucketMap[i].atIndex(j).getValue();
+                    j++;
+                    k++;
+                }
+            }
+        }
+        return keyArr;
     }
 
-    const values = () => {
-        //returns array containing all values
-    }
+    // const values = () => {
+    //     //returns array containing all values
+    // }
 
-    const entries = () => {
-        //returns an array containing each [[key, value],[key, value], ... ]
-    }
+    // const entries = () => {
+    //     //returns an array containing each [[key, value],[key, value], ... ]
+    // }
 
     return {
         set,
