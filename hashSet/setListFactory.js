@@ -35,7 +35,7 @@ export function linkedList() {
             _size++;
         }
     };
-            
+        
     const prepend = (value) => {
         //adds new node containing value to start
         let newHead = node(value, _head);
@@ -54,6 +54,7 @@ export function linkedList() {
     };
 
     const tail = () => {
+        if (_size === 1) return _head;
         //return last node
         return traverse(_head, _size);
     };
@@ -66,9 +67,12 @@ export function linkedList() {
 
     const pop = () => {
         //removes last element from list
-        traverse(_head, (_size-1)).setNext(null);
+        if(_size === 1){
+            _head.setValue(null);
+        } else {
+            traverse(_head, (_size-1)).setNext(null);
+        }
         _size--;
-        console.log("last element removed")
     };
 
     const contains = (value) => {

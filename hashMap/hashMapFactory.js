@@ -1,4 +1,4 @@
-import { linkedList } from "./listFactory.js";
+import { linkedList } from "./mapListFactory.js";
 
 export function hashMap(){
 
@@ -74,10 +74,6 @@ export function hashMap(){
         values,
         entries
     }
-
-};
-
-export function hashSet(){
 
 };
 

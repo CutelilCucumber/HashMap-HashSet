@@ -1,29 +1,34 @@
-import { hashMap, hashSet } from "./mapFactory.js";
+import { hashMap } from "./hashMap/hashMapFactory.js";
+import { hashSet } from "./hashSet/hashSetFactory.js";
+const test = new hashSet()
 
+ test.set('apple', 'red')
+ test.set('banana', 'yellow')
+ test.set('carrot', 'orange')
+ test.set('dog', 'brown')
+ test.set('elephant', 'gray')
+ test.set('frog', 'green')
+ test.set('grape', 'purple')
+ test.set('hat', 'black')
+ test.set('ice cream')
+ test.set('jacket')
+ test.set('kite')
+ test.set('lion')
+ test.set('moon')
+ test.set('man')
+ test.set('golden')
+ test.set('pink')
+ test.set('blue')
+ test.set('white')
+ test.set('white')
 
-
-
-
-
-//testing hash function outputs
-// let _tableSize = 16;
-
-//     function hash(key) {
-//         let hashCode = 0;
-      
-//         const primeNumber = 31;
-//         for (let i = 0; i < key.length; i++) {
-//             hashCode = (primeNumber * hashCode + key.charCodeAt(i)) % _tableSize;
-//             //modulo inside the loop helps avoid integer overflow
-//         }
-
-//         return hashCode;
-//     }
-//     console.log(hash('wolf'))
-//     console.log(hash('dog'))
-//     console.log(hash('cow'))
-//     console.log(hash('helicopter'))
-//     console.log(hash('shotgun'))
-//     console.log(hash('graverobber'))
-//     console.log(hash('z'))
-//     console.log(hash('w'))
+console.log(test.has('black'))
+console.log(test.length())
+console.log(test.keys())
+console.log(test.remove("blue"))
+console.log(test.remove("blue"))
+console.log(test.remove("lion"))
+console.log(test.remove("kite"))
+console.log(test.remove("jacket"))
+console.log(test.remove("man"))
+console.log(test.remove("moon"))

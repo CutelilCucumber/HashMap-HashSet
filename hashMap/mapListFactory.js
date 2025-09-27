@@ -1,4 +1,4 @@
-//linkedList factory containing only keys and link in each node
+//modify factory functions to accomodate nodes with key & value
 export function linkedList() {
     let _head = null;
     let _size = 0;
