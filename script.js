@@ -1,6 +1,7 @@
 import { hashMap } from "./hashMap/hashMapFactory.js";
 import { hashSet } from "./hashSet/hashSetFactory.js";
 const test = new hashMap();
+const test2 = new hashSet();
 
  test.set('apple', 'red')
  test.set('banana', 'yellow')
@@ -21,4 +22,3 @@ console.log(test.remove("banana"))
 console.log(test.entries())
 console.log(test.get("hat"))
 
-const test2 = new hashSet();
