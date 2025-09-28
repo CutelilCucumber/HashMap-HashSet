@@ -34,7 +34,7 @@ export function hashMap(){
         for (let i=0; i<tempMap.length; i++){
             if(tempMap[i]){
                 while (tempMap[i].size() !== 0){
-                    set(tempMap[i].tail().getValue());
+                    set(tempMap[i].tail().getKey());
                     tempMap[i].pop();
                 }
             }
@@ -43,12 +43,12 @@ export function hashMap(){
         
     }
     
-    const set = (key) => {
+    const set = (key, value) => {
         //if key already exists, exit set
-        let newHash = hash(key);
+        let newHash = hash(key, value);
         if (!_bucketMap[newHash]) {
             _bucketMap[newHash] = new linkedList();
-            _bucketMap[newHash].prepend(key);
+            _bucketMap[newHash].prepend(key, value);
 
 
             //growCapacity exactly when map reaches the load factor
@@ -61,7 +61,7 @@ export function hashMap(){
                 console.log("key already exists. Set failure")
                 return 0;
             } else {
-                _bucketMap[newHash].append(key);
+                _bucketMap[newHash].append(key, value);
 
             }
         }
@@ -71,6 +71,14 @@ export function hashMap(){
 
     const get = (key) => {
         //takes key and returns value. else null
+        let newHash = hash(key);
+        if (_bucketMap[newHash]){
+            let foundIndex = _bucketMap[newHash].find(key);
+            if (foundIndex){
+                return _bucketMap[newHash].atIndex(foundIndex).getValue();
+            }
+        }
+        return null;
     }
 
     const has = (key) => {
@@ -122,7 +130,7 @@ export function hashMap(){
             if(_bucketMap[i]){
                 let j = 1;
                 while (j <= _bucketMap[i].size()){
-                    keyArr[k] = _bucketMap[i].atIndex(j).getValue();
+                    keyArr[k] = _bucketMap[i].atIndex(j).getKey();
                     j++;
                     k++;
                 }
@@ -131,13 +139,42 @@ export function hashMap(){
         return keyArr;
     }
 
-    // const values = () => {
-    //     //returns array containing all values
-    // }
+    const values = () => {
+        //returns array containing all values
+        let valArr = [];
+        let k = 0;
+        for (let i=0; i<_capacity; i++){
+            if(_bucketMap[i]){
+                let j = 1;
+                while (j <= _bucketMap[i].size()){
+                    valArr[k] = _bucketMap[i].atIndex(j).getValue();
+                    j++;
+                    k++;
+                }
+            }
+        }
+        return valArr;
+    }
 
-    // const entries = () => {
-    //     //returns an array containing each [[key, value],[key, value], ... ]
-    // }
+    const entries = () => {
+        //returns a 2d array containing each key value pair
+        let hashArr = [];
+        let k = 0;
+        for (let i=0; i<_capacity; i++){
+            if(_bucketMap[i]){
+                let j = 1;
+                while (j <= _bucketMap[i].size()){
+                    hashArr[k]=[];
+                    hashArr[k][0] = _bucketMap[i].atIndex(j).getKey();
+                    hashArr[k][1] = _bucketMap[i].atIndex(j).getValue();
+                    j++;
+                    k++;
+                }
+            }
+        }
+        return hashArr;
+
+    }
 
     return {
         set,
@@ -152,10 +189,3 @@ export function hashMap(){
     }
 
 };
-
-//LIMITATION: Use the following snippet whenever you access a bucket through an index.
-//We want to throw an error if we try to access an out-of-bounds index:
-
-// if (index < 0 || index >= buckets.length) {
-//   throw new Error("Trying to access index out of bounds");
-// }

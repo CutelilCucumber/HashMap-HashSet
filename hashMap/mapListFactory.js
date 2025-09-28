@@ -11,7 +11,7 @@ export function linkedList() {
 
     function convertToString(node, runningStr){
         //recursive function to build a string
-        runningStr = runningStr+"( "+node.getValue()+" ) -> "
+        runningStr = runningStr+"( "+node.getKey()+", "+node.getValue()+" ) -> "
 
         if(node.getNext() === null){
             runningStr = runningStr+"null"
@@ -20,25 +20,25 @@ export function linkedList() {
         else return convertToString(node.getNext(), runningStr);
     }
 
-    function detect(node, findValue, index){
-        //recursive function to find value
-        if (node.getValue() === findValue) return index;
+    function detect(node, findKey, index){
+        //recursive function to find key
+        if (node.getKey() === findKey) return index;
         if (node.getNext() === null) return 0;
-        return detect(node.getNext(), findValue, (index+1));
+        return detect(node.getNext(), findKey, (index+1));
     }
 
-    const append = (value) => {
-        //adds new node containing value to end
-        if (_size === 0) prepend(value);
+    const append = (key, value) => {
+        //adds new node containing key value to end
+        if (_size === 0) prepend(key, value);
         else{
-            traverse(_head, _size).setNext(node(value));
+            traverse(_head, _size).setNext(node(key, null, value));
             _size++;
         }
     };
         
-    const prepend = (value) => {
-        //adds new node containing value to start
-        let newHead = node(value, _head);
+    const prepend = (key, value) => {
+        //adds new node containing key & value to start
+        let newHead = node(key, _head, value);
         _head = newHead;
         _size++;
     };
@@ -68,22 +68,22 @@ export function linkedList() {
     const pop = () => {
         //removes last element from list
         if(_size === 1){
-            _head.setValue(null);
+            _head = null;
         } else {
             traverse(_head, (_size-1)).setNext(null);
         }
         _size--;
     };
 
-    const contains = (value) => {
-        //return true if list contains value otherwise false
-        if (detect(_head, value, 1) !== 0) return true;
+    const contains = (key) => {
+        //return true if list contains key otherwise false
+        if (detect(_head, key, 1) !== 0) return true;
         else return false;
     };
 
-    const find = (value) => {
-        //return index of node containing value else null
-        let indexResult = detect(_head, value, 1);
+    const find = (key) => {
+        //return index of node containing key else null
+        let indexResult = detect(_head, key, 1);
         if (indexResult !== 0) return indexResult;
         else return null;
     };
@@ -136,10 +136,14 @@ export function linkedList() {
     };
 };
 
-function node(key, value, next) {
+function node(key, next, value) {
     let _key = key ?? null;
     let _value = value ?? null;
     let _nextNode = next ?? null;
+
+    const getKey = () => {
+        return _key;
+    };
 
     const getValue = () => {
         return _value;
@@ -147,6 +151,11 @@ function node(key, value, next) {
 
     const getNext = () => {
         return _nextNode;
+    };
+
+
+    const setKey = (val) => {
+        _key = val;
     };
 
     const setValue = (val) => {
@@ -158,8 +167,10 @@ function node(key, value, next) {
     };
 
     return {
+        getKey,
         getValue,
         getNext,
+        setKey,
         setValue,
         setNext
     };
